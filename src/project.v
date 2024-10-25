@@ -1,10 +1,3 @@
-module PGGen(output g, p, input a, b);
- 
-  and #(1) (g, a, b);
-  xor #(2) (p, a, b);
- 
-endmodule
-
 module tt_um_CLA8(
   input  wire [7:0] ui_in,    // Dedicated inputs
   output wire [7:0] uo_out,   // Dedicated outputs
@@ -23,10 +16,13 @@ wire cout;
 assign a = ui_in[7:0];
 assign b = uio_in[7:0];
 
-wire [7:0] g, p, c; 
+wire [7:0] g, p, c;
 wire [35:0] e;
 wire cin;
 buf #(1) (cin, 0);
+// g and p
+and #(1) (g, a, b);
+xor #(2) (p, a, b);
 //c[0]
 and #(1) (e[0], cin, p[0]);
 or #(1) (c[0], e[0], g[0]);
@@ -90,7 +86,6 @@ or #(1) (c[7], e[28], e[29], e[30], e[31], e[32], e[33], e[34], e[35], g[7]);
 xor #(2) (sum[0],p[0],cin);
 xor #(2) x[7:1](sum[7:1],p[7:1],c[6:0]);
 buf #(1) (cout, c[7]);
-PGGen pggen[7:0](g[7:0],p[7:0],a[7:0],b[7:0]);
 
 assign uo_out[7:0] = sum[7:0];
 assign uio_out[7:0] = 8'b00000000;
