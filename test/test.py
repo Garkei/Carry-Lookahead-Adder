@@ -33,7 +33,7 @@ async def test_project(dut):
             # Change it to match the actual expected output of your module:
             dut._log.info(f"value of output is: {dut.sum.value}.")
             # If these passes don't work, fail the program and show what you failed.
-            assert dut.sum.value == ((addends[i] + addends[j]) % 256)
+            assert dut.sum.value == ((addends[i] + addends[j]) & 0XFF)
     
             # Keep testing the module by changing the input values, waiting for
             # one or more clock cycles, and asserting the expected output values.
