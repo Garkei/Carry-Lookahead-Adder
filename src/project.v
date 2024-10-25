@@ -5,7 +5,7 @@ module PGGen(output g, p, input a, b);
  
 endmodule
 
-module CLA8(output [7:0] sum, output cout, input [7:0] a, b);
+module tt_um_CLA8(output [7:0] sum, output cout, input [7:0] a, b);
 wire [7:0] g, p, c;
 wire [135:0] e;
 wire cin;
