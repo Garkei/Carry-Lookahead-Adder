@@ -24,7 +24,7 @@ assign a = ui_in[7:0];
 assign b = uio_in[7:0];
 
 wire [7:0] g, p, c; 
-wire [135:0] e;
+wire [35:0] e;
 wire cin;
 buf #(1) (cin, 0);
 //c[0]
