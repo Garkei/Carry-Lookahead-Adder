@@ -5,8 +5,25 @@ module PGGen(output g, p, input a, b);
  
 endmodule
 
-module tt_um_CLA8(output [7:0] sum, output cout, input [7:0] a, b);
-wire [7:0] g, p, c;
+module tt_um_CLA8(
+  input  wire [7:0] ui_in,    // Dedicated inputs
+  output wire [7:0] uo_out,   // Dedicated outputs
+  input  wire [7:0] uio_in,   // IOs: Input path
+  output wire [7:0] uio_out,  // IOs: Output path
+  output wire [7:0] uio_oe,   // IOs: Enable path (active high: 0=input, 1=output)
+  input  wire       ena,      // always 1 when the design is powered, so you can ignore it
+  input  wire       clk,      // clock
+  input  wire       rst_n     // reset_n - low to reset
+);
+
+wire [7:0] a, b;
+wire [7:0] sum;
+wire cout;
+
+assign a = ui_in[7:0];
+assign b = uio_in[7:0];
+
+wire [7:0] g, p, c; 
 wire [135:0] e;
 wire cin;
 buf #(1) (cin, 0);
@@ -74,4 +91,8 @@ xor #(2) (sum[0],p[0],cin);
 xor #(2) x[7:1](sum[7:1],p[7:1],c[6:0]);
 buf #(1) (cout, c[7]);
 PGGen pggen[7:0](g[7:0],p[7:0],a[7:0],b[7:0]);
+
+assign uo_out[7:0] = sum[7:0];
+assign uio_out[7:0] = 8'b00000000;
+assign uio_oe = 8'b00000000;
 endmodule
