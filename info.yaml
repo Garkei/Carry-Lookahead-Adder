@@ -3,7 +3,7 @@ project:
   title:        "8-bit Carry Look-Ahead Adder"      # Project title
   author:       "Seongwan Jeon and Michael Zeng"      # Your name
   discord:      ""      # Your discord username, for communication and automatically assigning you a Tapeout role (optional)
-  description:  "Fast 4-bit adder"      # One line description of what your project does
+  description:  "Fast 8-bit adder"      # One line description of what your project does
   language:     "Verilog" # other examples include SystemVerilog, Amaranth, VHDL, etc
   clock_hz:     0       # Clock frequency in Hz (or 0 if not applicable)
 
