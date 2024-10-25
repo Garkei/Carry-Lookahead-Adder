@@ -1,64 +1,77 @@
-/*
- * Copyright (c) 2024 Weihua Xiao
- * SPDX-License-Identifier: Apache-2.0
- */
+module PGGen(output g, p, input a, b);
+ 
+  and #(1) (g, a, b);
+  xor #(2) (p, a, b);
+ 
+endmodule
 
-`default_nettype none
+module CLA8(output [7:0] sum, output cout, input [7:0] a, b);
+wire [7:0] g, p, c;
+wire [135:0] e;
+wire cin;
+buf #(1) (cin, 0);
+//c[0]
+and #(1) (e[0], cin, p[0]);
+or #(1) (c[0], e[0], g[0]);
 
-module tt_um_koggestone_adder4 (
-    input  wire [7:0] ui_in,    // Dedicated inputs
-    output wire [7:0] uo_out,   // Dedicated outputs
-    input  wire [7:0] uio_in,   // IOs: Input path
-    output wire [7:0] uio_out,  // IOs: Output path
-    output wire [7:0] uio_oe,   // IOs: Enable path (active high: 0=input, 1=output)
-    input  wire       ena,      // always 1 when the design is powered, so you can ignore it
-    input  wire       clk,      // clock
-    input  wire       rst_n     // reset_n - low to reset
-);
+//c[1]
+and #(1) (e[1], cin, p[0], p[1]);
+and #(1) (e[2], g[0], p[1]);
+or #(1) (c[1], e[1], e[2], g[1]);
 
-  wire [3:0] a, b;
-  wire [3:0] sum;
-  wire carry_out;
-  
-  assign a = ui_in[3:0];
-  assign b = ui_in[7:4];
-   
+//c[2]
+and #(1) (e[3], cin, p[0], p[1], p[2]);
+and #(1) (e[4], g[0], p[1], p[2]);
+and #(1) (e[5], g[1], p[2]);
+or #(1) (c[2], e[3], e[4], e[5], g[2]);
 
-  wire [3:0] p; // Propagate
-  wire [3:0] g; // Generate
-  wire [3:0] c; // Carry
+//c[3]
+and #(1) (e[6], cin, p[0], p[1], p[2], p[3]);
+and #(1) (e[7], g[0], p[1], p[2], p[3]);
+and #(1) (e[8], g[1], p[2], p[3]);
+and #(1) (e[9], g[2], p[3]);
+or #(1) (c[3], e[6], e[7], e[8], e[9], g[3]);
 
-  // Precompute generate and propagate signals
-  assign p = a ^ b; // Propagate
-  assign g = a & b; // Generate
+//c[4]
+and #(1) (e[10], cin, p[0], p[1], p[2], p[3], p[4]);
+and #(1) (e[11], g[0], p[1], p[2], p[3], p[4]);
+and #(1) (e[12], g[1], p[2], p[3], p[4]);
+and #(1) (e[13], g[2], p[3], p[4]);
+and #(1) (e[14], g[3], p[4]);
+or #(1) (c[4], e[10], e[11], e[12], e[13], e[14], g[4]);
 
-  // Stage 1: Compute generate signals for neighbor 1-bit pairs
-  wire g1_1, g1_2, g1_3;
-  wire p1_1, p1_2, p1_3; 
-  assign g1_1 = g[1] | (p[1] & g[0]);   // Combine 1st and 0th bits
-  assign g1_2 = g[2] | (p[2] & g[1]);   // Combine 2nd and 1st bits
-  assign p1_2 = p[2] & p[1];	
-  assign g1_3 = g[3] | (p[3] & g[2]);   // Combine 3rd and 2nd bits
-  assign p1_3 = p[3] & p[2];
+//c[5]
+and #(1) (e[15], cin, p[0], p[1], p[2], p[3], p[4], p[5]);
+and #(1) (e[16], g[0], p[1], p[2], p[3], p[4], p[5]);
+and #(1) (e[17], g[1], p[2], p[3], p[4], p[5]);
+and #(1) (e[18], g[2], p[3], p[4], p[5]);
+and #(1) (e[19], g[3], p[4], p[5]);
+and #(1) (e[20], g[4], p[5]);
+or #(1) (c[5], e[15], e[16], e[17], e[18], e[19], e[20], g[5]);
 
-  // Stage 2: Compute generate signals for 2-bit groups
-  wire g2_2, g2_3;
-  assign g2_2 = g1_2 | (p1_2 & g[0]);   // Combine 2-bit group (2nd and 0th bits)
-  assign g2_3 = g1_3 | (p1_3 & g1_1);   // Combine 2-bit group (3rd and 1st bits)
+//c[6]
+and #(1) (e[21], cin, p[0], p[1], p[2], p[3], p[4], p[5], p[6]);
+and #(1) (e[22], g[0], p[1], p[2], p[3], p[4], p[5], p[6]);
+and #(1) (e[23], g[1], p[2], p[3], p[4], p[5], p[6]);
+and #(1) (e[24], g[2], p[3], p[4], p[5], p[6]);
+and #(1) (e[25], g[3], p[4], p[5], p[6]);
+and #(1) (e[26], g[4], p[5], p[6]);
+and #(1) (e[27], g[5], p[6]);
+or #(1) (c[6], e[21], e[22], e[23], e[24], e[25], e[26], e[27], g[6]);
 
-  // Compute final carry signals
-  assign c[0] = 0;                      // No carry into the first bit
-  assign c[1] = g[0];                   // Carry for 1st bit
-  assign c[2] = g1_1;                   // Carry for 2nd bit
-  assign c[3] = g2_2;                   // Carry for 3rd bit
-  assign carry_out = g2_3;              // Carry-out
+//c[7]
+and #(1) (e[28], cin, p[0], p[1], p[2], p[3], p[4], p[5], p[6], p[7]);
+and #(1) (e[29], g[0], p[1], p[2], p[3], p[4], p[5], p[6], p[7]);
+and #(1) (e[30], g[1], p[2], p[3], p[4], p[5], p[6], p[7]);
+and #(1) (e[31], g[2], p[3], p[4], p[5], p[6], p[7]);
+and #(1) (e[32], g[3], p[4], p[5], p[6], p[7]);
+and #(1) (e[33], g[4], p[5], p[6], p[7]);
+and #(1) (e[34], g[5], p[6], p[7]);
+and #(1) (e[35], g[6], p[7]);
+or #(1) (c[7], e[28], e[29], e[30], e[31], e[32], e[33], e[34], e[35], g[7]);
 
-  // Sum computation
-  assign sum = p ^ c;                               // XOR of propagate and carry
-
-  assign uo_out[3:0] = sum;
-  assign uo_out[4] = carry_out; 
-  assign uo_out[7:5] = 3'b000;
-  assign uio_out = 8'b00000000;
-  assign uio_oe = 8'b00000000;
+xor #(2) (sum[0],p[0],cin);
+xor #(2) x[7:1](sum[7:1],p[7:1],c[6:0]);
+buf #(1) (cout, c[7]);
+PGGen pggen[7:0](g[7:0],p[7:0],a[7:0],b[7:0]);
 endmodule
