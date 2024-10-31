@@ -29,4 +29,4 @@ ui_in[7:0] is addend 1, and uio_in[7:0] is addend 2. ui_out[7:0] is sum.
 
 ## External hardware
 
-No external hardware needed
+No external hardware needed.
