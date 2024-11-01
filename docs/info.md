@@ -27,6 +27,8 @@ The CLA in this project is an 8-bit adder that does not utilize the implementati
 
 ui_in[7:0] is addend 1, and uio_in[7:0] is addend 2. ui_out[7:0] is sum.
 
+The adder was tested using all possible pairs of integers from 0 to 255 as inputs, which resulted in 25536 test cases total. For example, the adder would use 0x25 and 0xD7 as inputs, add them up to 0xFC, and the result would be checked to make sure it was the correct output. Carry out was not checked as there is no output pin for a carry out on the board.
+
 ## External hardware
 
 No external hardware needed.
