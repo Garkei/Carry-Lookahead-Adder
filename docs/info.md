@@ -13,7 +13,6 @@ A carry-lookahead adder (CLA) is a type of adder designed for fast speeds. First
 
 <img width="194" alt="Screenshot 2024-11-02 at 10 50 10" src="https://github.com/user-attachments/assets/4c676dc9-dfa3-4d00-a47c-7d980b83dca0">
 
-
 The calculations for the propagate, generate, and sum signals are trivial, but the calculation for the carry bit is dependent on its value in the previous bit, which makes it more complicated to solve. For example, all of the carry bits in a 4-bit CLA adder can be seen in the equation and diagram below:
 
 ![image](https://github.com/user-attachments/assets/4da94fc2-f0ff-4652-86f2-8dcdcfdabf8d)
